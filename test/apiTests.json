@@ -1,0 +1,187 @@
+{
+    "apiTests": {
+        "description": "REST API Test Cases for Habit Tracking System",
+        "version": "1.0",
+        "baseUrl": "http://localhost:3000/api",
+        "tests": [
+            {
+                "id": "AUTH-01",
+                "name": "Register new user",
+                "method": "POST",
+                "endpoint": "/users/register",
+                "body": {
+                    "name": "Test User",
+                    "email": "test@example.com",
+                    "password": "password123"
+                },
+                "expectedStatus": 201,
+                "expectedFields": [
+                    "token",
+                    "user.id",
+                    "user.email"
+                ]
+            },
+            {
+                "id": "AUTH-02",
+                "name": "Login with valid credentials",
+                "method": "POST",
+                "endpoint": "/users/login",
+                "body": {
+                    "email": "test@example.com",
+                    "password": "password123"
+                },
+                "expectedStatus": 200,
+                "expectedFields": [
+                    "token",
+                    "user.id"
+                ]
+            },
+            {
+                "id": "AUTH-03",
+                "name": "Login with wrong password",
+                "method": "POST",
+                "endpoint": "/users/login",
+                "body": {
+                    "email": "test@example.com",
+                    "password": "wrongpassword"
+                },
+                "expectedStatus": 401,
+                "expectedFields": [
+                    "error"
+                ]
+            },
+            {
+                "id": "AUTH-04",
+                "name": "Access protected route without token",
+                "method": "GET",
+                "endpoint": "/habits",
+                "headers": {},
+                "expectedStatus": 401
+            },
+            {
+                "id": "HABIT-01",
+                "name": "Create a new habit",
+                "method": "POST",
+                "endpoint": "/habits",
+                "headers": {
+                    "Authorization": "Bearer <JWT_TOKEN>"
+                },
+                "body": {
+                    "title": "Morning Run",
+                    "frequency": "daily",
+                    "icon": "fitness",
+                    "description": "Run 5km every morning"
+                },
+                "expectedStatus": 201,
+                "expectedFields": [
+                    "habit.id",
+                    "habit.title",
+                    "habit.frequency"
+                ]
+            },
+            {
+                "id": "HABIT-02",
+                "name": "Get all habits",
+                "method": "GET",
+                "endpoint": "/habits",
+                "headers": {
+                    "Authorization": "Bearer <JWT_TOKEN>"
+                },
+                "expectedStatus": 200,
+                "expectedFields": [
+                    "habits"
+                ]
+            },
+            {
+                "id": "HABIT-03",
+                "name": "Update a habit",
+                "method": "PUT",
+                "endpoint": "/habits/1",
+                "headers": {
+                    "Authorization": "Bearer <JWT_TOKEN>"
+                },
+                "body": {
+                    "title": "Evening Run",
+                    "frequency": "daily"
+                },
+                "expectedStatus": 200,
+                "expectedFields": [
+                    "habit.title"
+                ]
+            },
+            {
+                "id": "HABIT-04",
+                "name": "Log habit as complete (toggle)",
+                "method": "POST",
+                "endpoint": "/habits/1/log",
+                "headers": {
+                    "Authorization": "Bearer <JWT_TOKEN>"
+                },
+                "body": {
+                    "date": "2026-03-26"
+                },
+                "expectedStatus": 200,
+                "expectedFields": [
+                    "action",
+                    "date"
+                ],
+                "notes": "action will be 'logged' on first call, 'removed' on second"
+            },
+            {
+                "id": "HABIT-05",
+                "name": "Delete a habit",
+                "method": "DELETE",
+                "endpoint": "/habits/1",
+                "headers": {
+                    "Authorization": "Bearer <JWT_TOKEN>"
+                },
+                "expectedStatus": 200,
+                "expectedFields": [
+                    "message"
+                ]
+            },
+            {
+                "id": "ANALYTICS-01",
+                "name": "Get analytics summary",
+                "method": "GET",
+                "endpoint": "/analytics/summary",
+                "headers": {
+                    "Authorization": "Bearer <JWT_TOKEN>"
+                },
+                "expectedStatus": 200,
+                "expectedFields": [
+                    "summary.totalHabits",
+                    "summary.completionRate",
+                    "summary.bestStreak"
+                ]
+            },
+            {
+                "id": "ANALYTICS-02",
+                "name": "Get daily analytics (7 days)",
+                "method": "GET",
+                "endpoint": "/analytics/daily?days=7",
+                "headers": {
+                    "Authorization": "Bearer <JWT_TOKEN>"
+                },
+                "expectedStatus": 200,
+                "expectedFields": [
+                    "daily"
+                ],
+                "notes": "Returns array of 7 objects with date, completed, total, rate"
+            },
+            {
+                "id": "ANALYTICS-03",
+                "name": "Get streaks for all habits",
+                "method": "GET",
+                "endpoint": "/analytics/streaks",
+                "headers": {
+                    "Authorization": "Bearer <JWT_TOKEN>"
+                },
+                "expectedStatus": 200,
+                "expectedFields": [
+                    "streaks"
+                ]
+            }
+        ]
+    }
+}

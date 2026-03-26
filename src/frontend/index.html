@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Habits – HabitFlow</title>
+    <meta name="description" content="Manage and track your daily habits with HabitFlow." />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="icon" href="assets/images/logo.png" type="image/png" />
+    <!-- Theme script MUST load first -->
+    <script src="scripts/theme.js"></script>
+</head>
+
+<body>
+
+    <!-- ─── Toast ─── -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ─── Navbar ─── -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img class="navbar-logo" src="assets/images/logo.png" alt="HabitFlow" />
+            <span class="navbar-title">HabitFlow</span>
+        </div>
+        <nav class="navbar-nav">
+            <a href="index.html" class="nav-link active">My Habits</a>
+            <a href="dashboard.html" class="nav-link">Analytics</a>
+            <a href="planner.html" class="nav-link">Planner</a>
+            <a href="reports.html" class="nav-link">Reports</a>
+            <a href="settings.html" class="nav-link">Settings</a>
+        </nav>
+        <div class="navbar-actions">
+            <span class="user-greeting" id="userGreeting"></span>
+            <button class="theme-toggle-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
+            <button class="btn btn-secondary btn-sm" onclick="logout()">Sign Out</button>
+        </div>
+    </nav>
+
+    <!-- ─── Main Content ─── -->
+    <main class="page-wrapper">
+        <div class="container">
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">My Habits</h1>
+                    <p class="page-subtitle" id="dateDisplay"></p>
+                </div>
+                <button class="btn btn-primary" id="addHabitBtn" onclick="openModal()">
+                    <span>＋</span> New Habit
+                </button>
+            </div>
+
+            <!-- Control Center -->
+            <section class="home-control-center">
+                <div class="home-control-header">
+                    <h3>Control Center</h3>
+                    <p>Search, filter, and focus on what matters today.</p>
+                </div>
+                <div class="home-control-grid">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label" for="habitSearch">Search Habit</label>
+                        <input class="form-control" id="habitSearch" type="text" placeholder="Search by habit name..." />
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label" for="frequencyFilter">Frequency</label>
+                        <select class="form-control" id="frequencyFilter">
+                            <option value="all">All</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label" for="statusFilter">Today Status</label>
+                        <select class="form-control" id="statusFilter">
+                            <option value="all">All</option>
+                            <option value="done">Completed</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label" for="categoryFilter">Category</label>
+                        <select class="form-control" id="categoryFilter">
+                            <option value="all">All</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label" for="tagFilter">Tag</label>
+                        <input class="form-control" id="tagFilter" type="text" placeholder="e.g. health, focus" />
+                    </div>
+                    <div class="home-control-actions">
+                        <button class="btn btn-secondary" id="clearFiltersBtn" type="button">Reset Filters</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="onboarding-guide" id="onboardingGuide" style="display:none;">
+                <div class="onboarding-guide-content">
+                    <h3>Welcome to HabitFlow</h3>
+                    <p>Start with 1-3 simple habits, add categories and tags, and keep your streak alive by checking in daily.</p>
+                </div>
+                <button class="btn btn-secondary btn-sm" id="dismissOnboardingBtn" type="button">Dismiss</button>
+            </section>
+
+            <!-- Today Focus -->
+            <section class="home-focus-strip">
+                <div class="focus-strip-main">
+                    <div class="focus-strip-title">Today's Focus</div>
+                    <div class="focus-strip-progress-line">
+                        <div class="focus-strip-progress-fill" id="dailyProgressBar"></div>
+                    </div>
+                    <div class="focus-strip-caption" id="dailyProgressText">0 of 0 habits completed today</div>
+                </div>
+                <div class="focus-strip-meta" id="dailyFocusMessage">Start with one quick habit to gain momentum.</div>
+            </section>
+
+            <!-- Home Insights -->
+            <section class="home-insights-grid">
+                <article class="home-insight-card">
+                    <h4>Top Performer</h4>
+                    <p id="insightBestHabit">No data yet</p>
+                </article>
+                <article class="home-insight-card">
+                    <h4>Needs Attention</h4>
+                    <p id="insightNeedsAttention">No data yet</p>
+                </article>
+                <article class="home-insight-card">
+                    <h4>Guidance</h4>
+                    <p id="insightCompletionHint">Stay consistent today.</p>
+                </article>
+            </section>
+
+            <!-- Recent Wins -->
+            <section class="home-wins-card">
+                <h3 class="chart-title"><span>🏁</span> Recent Wins</h3>
+                <div class="wins-list" id="recentWinsList">
+                    <div class="skeleton" style="height:40px;"></div>
+                    <div class="skeleton" style="height:40px;"></div>
+                    <div class="skeleton" style="height:40px;"></div>
+                </div>
+            </section>
+
+            <!-- Habit List -->
+            <div id="habitsGrid" class="habits-grid">
+                <!-- Skeleton placeholders -->
+                <div class="habit-card skeleton" style="height:160px;"></div>
+                <div class="habit-card skeleton" style="height:160px;"></div>
+                <div class="habit-card skeleton" style="height:160px;"></div>
+            </div>
+
+            <!-- Empty state (hidden by default) -->
+            <div class="empty-state" id="emptyState" style="display:none;">
+                <div class="empty-icon">🌱</div>
+                <h3>No habits yet</h3>
+                <p id="emptyStateText">Start your journey by adding your first habit!</p>
+                <button class="btn btn-primary" style="margin-top:1.5rem;" onclick="openModal()">
+                    ＋ Add Your First Habit
+                </button>
+                <div class="template-actions" id="templateActions" style="display:none;">
+                    <p>Quick start with templates:</p>
+                    <div class="template-buttons">
+                        <button class="btn btn-secondary btn-sm" type="button"
+                            onclick="createTemplateSet('wellness')">Wellness</button>
+                        <button class="btn btn-secondary btn-sm" type="button"
+                            onclick="createTemplateSet('productivity')">Productivity</button>
+                        <button class="btn btn-secondary btn-sm" type="button"
+                            onclick="createTemplateSet('balanced')">Balanced</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ─── Add/Edit Habit Modal ─── -->
+    <div class="modal-overlay" id="habitModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">New Habit</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+
+            <form id="habitForm" onsubmit="handleHabitSubmit(event)">
+                <input type="hidden" id="editHabitId" value="" />
+
+                <div class="form-group">
+                    <label class="form-label" for="habitTitle">Habit Name *</label>
+                    <input class="form-control" id="habitTitle" type="text"
+                        placeholder="e.g. Morning Run, Read 20 pages..." maxlength="80" required />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="habitDesc">Description (optional)</label>
+                    <input class="form-control" id="habitDesc" type="text" placeholder="Brief description..."
+                        maxlength="160" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="habitFreq">Frequency</label>
+                    <select class="form-control" id="habitFreq">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="habitCategory">Category</label>
+                    <input class="form-control" id="habitCategory" type="text" placeholder="e.g. health, career, mindfulness"
+                        maxlength="30" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="habitTags">Tags (comma-separated)</label>
+                    <input class="form-control" id="habitTags" type="text" placeholder="e.g. morning, deep-work"
+                        maxlength="120" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Icon</label>
+                    <div class="icon-picker" id="iconPicker">
+                        <button type="button" class="icon-option selected" data-icon="fitness"
+                            onclick="selectIcon('fitness', this)">
+                            <img src="assets/images/icons/fitness.png" alt="Fitness" />
+                            <span>Fitness</span>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="study" onclick="selectIcon('study', this)">
+                            <img src="assets/images/icons/study.png" alt="Study" />
+                            <span>Study</span>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="water" onclick="selectIcon('water', this)">
+                            <img src="assets/images/icons/water.png" alt="Water" />
+                            <span>Water</span>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="sleep" onclick="selectIcon('sleep', this)">
+                            <img src="assets/images/icons/sleep.png" alt="Sleep" />
+                            <span>Sleep</span>
+                        </button>
+                        <button type="button" class="icon-option" data-icon="general"
+                            onclick="selectIcon('general', this)">
+                            <img src="assets/images/logo.png" alt="General" />
+                            <span>General</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+                    <button type="button" class="btn btn-secondary" style="flex:1;"
+                        onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex:2;" id="habitSubmitBtn">
+                        Save Habit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ─── Delete Confirmation Modal ─── -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal" style="max-width:380px;text-align:center;">
+            <div style="font-size:3rem;margin-bottom:1rem;">🗑️</div>
+            <h3 style="margin-bottom:0.5rem;">Delete Habit?</h3>
+            <p style="margin-bottom:1.5rem;">This will permanently delete this habit and all its logs.</p>
+            <div style="display:flex;gap:0.75rem;">
+                <button class="btn btn-secondary" style="flex:1;" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" style="flex:1;" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+
+</html>

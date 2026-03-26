@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login – HabitFlow</title>
+  <meta name="description"
+    content="Sign in to HabitFlow and start tracking your daily habits with beautiful analytics." />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="icon" href="assets/images/logo.png" type="image/png" />
+  <!-- Theme script MUST be first to avoid flash of unstyled content -->
+  <script src="scripts/theme.js"></script>
+</head>
+
+<body>
+
+  <!-- ─── Background ─── -->
+  <div class="auth-bg"></div>
+
+  <!-- ─── Theme Toggle (top-right) ─── -->
+  <div class="auth-topbar">
+    <button class="theme-toggle-btn" id="themeToggle" title="Switch theme" aria-label="Toggle theme">🌙</button>
+  </div>
+
+  <!-- ─── Toast Container ─── -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ─── Auth Page ─── -->
+  <div class="auth-page">
+
+    <!-- Left hero panel (larger screens) -->
+    <div class="auth-left">
+      <div>
+        <div class="auth-logo">
+          <img src="assets/images/logo.png" alt="HabitFlow Logo" />
+          <span class="auth-logo-title">HabitFlow</span>
+        </div>
+
+        <!-- We rely on the beautiful auth-bg background now instead of a small inline image -->
+
+        <h1 class="auth-hero-title">Build habits.<br />Transform your life.</h1>
+        <p class="auth-hero-desc">
+          Track your daily habits, visualize progress with stunning analytics,
+          and build unstoppable streaks that drive lasting change.
+        </p>
+        <ul class="auth-features">
+          <li>Track unlimited habits across any category</li>
+          <li>Beautiful analytics with charts &amp; streaks</li>
+          <li>Daily completion streaks to keep you motivated</li>
+          <li>Secure and private — your data stays yours</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Right auth panel -->
+    <div class="auth-right">
+      <div class="auth-box">
+
+        <!-- Logo (mobile only) -->
+        <div class="auth-logo" style="margin-bottom:2rem;">
+          <img src="assets/images/logo.png" alt="HabitFlow Logo" />
+          <span class="auth-logo-title">HabitFlow</span>
+        </div>
+
+        <!-- Tab switcher -->
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="loginTab" onclick="switchTab('login')">Sign In</button>
+          <button class="auth-tab" id="registerTab" onclick="switchTab('register')">Sign Up</button>
+        </div>
+
+        <!-- Login Form -->
+        <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label" for="loginEmail">Email Address</label>
+            <input class="form-control" id="loginEmail" type="email" placeholder="you@example.com" autocomplete="email"
+              required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="loginPassword">Password</label>
+            <input class="form-control" id="loginPassword" type="password" placeholder="••••••••"
+              autocomplete="current-password" required />
+          </div>
+          <button class="btn btn-primary btn-lg" type="submit" id="loginBtn" style="width:100%;margin-top:0.5rem;">
+            <span id="loginBtnText">Sign In</span>
+          </button>
+          <p style="text-align:center;margin-top:1.25rem;font-size:0.875rem;color:var(--text-muted);">
+            Don't have an account?
+            <button type="button" onclick="switchTab('register')"
+              style="background:none;border:none;color:var(--color-purple-light);font-weight:600;cursor:pointer;">
+              Sign up free
+            </button>
+          </p>
+        </form>
+
+        <!-- Register Form -->
+        <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label class="form-label" for="regName">Full Name</label>
+            <input class="form-control" id="regName" type="text" placeholder="Jane Doe" autocomplete="name" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regEmail">Email Address</label>
+            <input class="form-control" id="regEmail" type="email" placeholder="you@example.com" autocomplete="email"
+              required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regPassword">Password</label>
+            <input class="form-control" id="regPassword" type="password" placeholder="At least 6 characters"
+              autocomplete="new-password" minlength="6" required />
+          </div>
+          <button class="btn btn-primary btn-lg" type="submit" id="registerBtn" style="width:100%;margin-top:0.5rem;">
+            <span id="registerBtnText">Create Account</span>
+          </button>
+          <p style="text-align:center;margin-top:1.25rem;font-size:0.875rem;color:var(--text-muted);">
+            Already have an account?
+            <button type="button" onclick="switchTab('login')"
+              style="background:none;border:none;color:var(--color-purple-light);font-weight:600;cursor:pointer;">
+              Sign in
+            </button>
+          </p>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/auth.js"></script>
+</body>
+
+</html>

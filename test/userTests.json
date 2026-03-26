@@ -1,0 +1,136 @@
+{
+    "userTests": {
+        "description": "User Registration and Authentication Test Cases",
+        "version": "1.0",
+        "tests": [
+            {
+                "id": "USER-01",
+                "name": "Valid registration",
+                "input": {
+                    "name": "Alice Smith",
+                    "email": "alice@example.com",
+                    "password": "securePass123"
+                },
+                "expectedOutcome": "success",
+                "expectedStatus": 201,
+                "checks": [
+                    "Token is returned in response",
+                    "User object contains id, name, email",
+                    "Password is NOT returned in response",
+                    "User is stored in DB with bcrypt hash"
+                ]
+            },
+            {
+                "id": "USER-02",
+                "name": "Registration with duplicate email",
+                "input": {
+                    "name": "Bob Jones",
+                    "email": "alice@example.com",
+                    "password": "anotherPass"
+                },
+                "expectedOutcome": "failure",
+                "expectedStatus": 409,
+                "expectedError": "Email is already registered"
+            },
+            {
+                "id": "USER-03",
+                "name": "Registration with short password",
+                "input": {
+                    "name": "Carol White",
+                    "email": "carol@example.com",
+                    "password": "123"
+                },
+                "expectedOutcome": "failure",
+                "expectedStatus": 400,
+                "expectedError": "Password must be at least 6 characters"
+            },
+            {
+                "id": "USER-04",
+                "name": "Registration with invalid email",
+                "input": {
+                    "name": "Dave Black",
+                    "email": "not-an-email",
+                    "password": "validPassword"
+                },
+                "expectedOutcome": "failure",
+                "expectedStatus": 400,
+                "expectedError": "Invalid email format"
+            },
+            {
+                "id": "USER-05",
+                "name": "Registration with missing fields",
+                "input": {
+                    "email": "missing@example.com"
+                },
+                "expectedOutcome": "failure",
+                "expectedStatus": 400,
+                "expectedError": "Name, email, and password are required"
+            },
+            {
+                "id": "USER-06",
+                "name": "Valid login",
+                "input": {
+                    "email": "alice@example.com",
+                    "password": "securePass123"
+                },
+                "prerequisite": "USER-01 must be completed first",
+                "expectedOutcome": "success",
+                "expectedStatus": 200,
+                "checks": [
+                    "Token is returned",
+                    "User object contains id, name, email",
+                    "token is valid JWT"
+                ]
+            },
+            {
+                "id": "USER-07",
+                "name": "Login with wrong password",
+                "input": {
+                    "email": "alice@example.com",
+                    "password": "wrongPassword"
+                },
+                "expectedOutcome": "failure",
+                "expectedStatus": 401,
+                "expectedError": "Invalid email or password"
+            },
+            {
+                "id": "USER-08",
+                "name": "Login with non-existent email",
+                "input": {
+                    "email": "ghost@example.com",
+                    "password": "anything"
+                },
+                "expectedOutcome": "failure",
+                "expectedStatus": 401,
+                "expectedError": "Invalid email or password"
+            },
+            {
+                "id": "USER-09",
+                "name": "Get profile with valid token",
+                "method": "GET",
+                "endpoint": "/api/users/profile",
+                "headers": {
+                    "Authorization": "Bearer <TOKEN_FROM_USER-06>"
+                },
+                "expectedOutcome": "success",
+                "expectedStatus": 200,
+                "checks": [
+                    "Returns user.id, user.name, user.email, user.created_at",
+                    "Does NOT return password"
+                ]
+            },
+            {
+                "id": "USER-10",
+                "name": "Get profile with expired/invalid token",
+                "method": "GET",
+                "endpoint": "/api/users/profile",
+                "headers": {
+                    "Authorization": "Bearer invalid.token.here"
+                },
+                "expectedOutcome": "failure",
+                "expectedStatus": 401,
+                "expectedError": "Invalid token."
+            }
+        ]
+    }
+}

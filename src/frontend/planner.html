@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Planner - HabitFlow</title>
+    <meta name="description" content="Plan and track your habits for any day." />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="icon" href="assets/images/logo.png" type="image/png" />
+    <script src="scripts/theme.js"></script>
+</head>
+
+<body>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img class="navbar-logo" src="assets/images/logo.png" alt="HabitFlow" />
+            <span class="navbar-title">HabitFlow</span>
+        </div>
+        <nav class="navbar-nav">
+            <a href="index.html" class="nav-link">My Habits</a>
+            <a href="dashboard.html" class="nav-link">Analytics</a>
+            <a href="planner.html" class="nav-link active">Planner</a>
+            <a href="reports.html" class="nav-link">Reports</a>
+            <a href="settings.html" class="nav-link">Settings</a>
+        </nav>
+        <div class="navbar-actions">
+            <span class="user-greeting" id="userGreeting"></span>
+            <button class="theme-toggle-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
+            <button class="btn btn-secondary btn-sm" onclick="logout()">Sign Out</button>
+        </div>
+    </nav>
+
+    <main class="page-wrapper">
+        <div class="container">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Habit Planner</h1>
+                    <p class="page-subtitle">Track your habits for any day, not just today.</p>
+                </div>
+            </div>
+
+            <section class="planner-toolbar">
+                <button class="btn btn-secondary" id="prevDayBtn" type="button">Previous</button>
+                <div class="planner-date-block">
+                    <div class="planner-date-label">Selected Date</div>
+                    <div class="planner-date-value" id="plannerDateValue">-</div>
+                </div>
+                <button class="btn btn-secondary" id="nextDayBtn" type="button">Next</button>
+                <button class="btn btn-primary" id="todayBtn" type="button">Today</button>
+            </section>
+
+            <section class="planner-stats-grid" id="plannerStats">
+                <div class="home-insight-card">
+                    <h4>Planned Habits</h4>
+                    <p id="plannerTotalHabits">0</p>
+                </div>
+                <div class="home-insight-card">
+                    <h4>Completed</h4>
+                    <p id="plannerCompletedHabits">0</p>
+                </div>
+                <div class="home-insight-card">
+                    <h4>Completion</h4>
+                    <p id="plannerCompletionRate">0%</p>
+                </div>
+            </section>
+
+            <section class="home-wins-card" style="margin-bottom:2rem;">
+                <h3 class="chart-title"><span>🗓️</span> Daily Habit Checklist</h3>
+                <div class="planner-list" id="plannerList">
+                    <div class="skeleton" style="height:54px;"></div>
+                    <div class="skeleton" style="height:54px;"></div>
+                    <div class="skeleton" style="height:54px;"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/planner.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports - HabitFlow</title>
+    <meta name="description" content="Professional progress reports for your habit journey." />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="icon" href="assets/images/logo.png" type="image/png" />
+    <script src="scripts/theme.js"></script>
+</head>
+
+<body>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img class="navbar-logo" src="assets/images/logo.png" alt="HabitFlow" />
+            <span class="navbar-title">HabitFlow</span>
+        </div>
+        <nav class="navbar-nav">
+            <a href="index.html" class="nav-link">My Habits</a>
+            <a href="dashboard.html" class="nav-link">Analytics</a>
+            <a href="planner.html" class="nav-link">Planner</a>
+            <a href="reports.html" class="nav-link active">Reports</a>
+            <a href="settings.html" class="nav-link">Settings</a>
+        </nav>
+        <div class="navbar-actions">
+            <span class="user-greeting" id="userGreeting"></span>
+            <button class="theme-toggle-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
+            <button class="btn btn-secondary btn-sm" onclick="logout()">Sign Out</button>
+        </div>
+    </nav>
+
+    <main class="page-wrapper">
+        <div class="container">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Progress Reports</h1>
+                    <p class="page-subtitle">A management-style snapshot of consistency and streak quality.</p>
+                </div>
+                <button class="btn btn-primary" id="printReportBtn" type="button">Print Report</button>
+            </div>
+
+            <section class="home-insights-grid" style="margin-bottom:1rem;">
+                <article class="home-insight-card">
+                    <h4>Total Habits</h4>
+                    <p id="reportTotalHabits">-</p>
+                </article>
+                <article class="home-insight-card">
+                    <h4>Completion Rate</h4>
+                    <p id="reportCompletionRate">-%</p>
+                </article>
+                <article class="home-insight-card">
+                    <h4>Best Streak</h4>
+                    <p id="reportBestStreak">- days</p>
+                </article>
+            </section>
+
+            <section class="insights-grid">
+                <div class="insight-card">
+                    <h3 class="chart-title"><span>🏅</span> Achievements</h3>
+                    <div class="recommend-list" id="achievementList">
+                        <div class="skeleton" style="height:42px;"></div>
+                        <div class="skeleton" style="height:42px;"></div>
+                    </div>
+                </div>
+                <div class="insight-card">
+                    <h3 class="chart-title"><span>📌</span> Improvement Areas</h3>
+                    <div class="recommend-list" id="improvementList">
+                        <div class="skeleton" style="height:42px;"></div>
+                        <div class="skeleton" style="height:42px;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="charts-grid" style="margin-bottom:2rem;">
+                <div class="chart-card">
+                    <h3 class="chart-title"><span>📈</span> Monthly Report Table</h3>
+                    <div class="report-table-wrap">
+                        <table class="report-table" id="monthlyReportTable">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Completed</th>
+                                    <th>Possible</th>
+                                    <th>Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title"><span>🔥</span> Streak Ranking</h3>
+                    <div class="streak-list" id="reportStreakRanking">
+                        <div class="skeleton" style="height:56px;border-radius:12px;"></div>
+                        <div class="skeleton" style="height:56px;border-radius:12px;"></div>
+                        <div class="skeleton" style="height:56px;border-radius:12px;"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/reports.js"></script>
+</body>
+
+</html>

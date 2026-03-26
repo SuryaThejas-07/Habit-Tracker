@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics – HabitFlow</title>
+    <meta name="description" content="View your habit analytics, streaks, and progress charts on HabitFlow." />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="icon" href="assets/images/logo.png" type="image/png" />
+    <!-- Theme script MUST load first -->
+    <script src="scripts/theme.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ─── Toast ─── -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ─── Navbar ─── -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img class="navbar-logo" src="assets/images/logo.png" alt="HabitFlow" />
+            <span class="navbar-title">HabitFlow</span>
+        </div>
+        <nav class="navbar-nav">
+            <a href="index.html" class="nav-link">My Habits</a>
+            <a href="dashboard.html" class="nav-link active">Analytics</a>
+            <a href="planner.html" class="nav-link">Planner</a>
+            <a href="reports.html" class="nav-link">Reports</a>
+            <a href="settings.html" class="nav-link">Settings</a>
+        </nav>
+        <div class="navbar-actions">
+            <span class="user-greeting" id="userGreeting"></span>
+            <button class="theme-toggle-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
+            <button class="btn btn-secondary btn-sm" onclick="logout()">Sign Out</button>
+        </div>
+    </nav>
+
+    <!-- ─── Main Content ─── -->
+    <main class="page-wrapper">
+        <div class="container">
+
+            <!-- Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Analytics Dashboard</h1>
+                    <p class="page-subtitle">Insights into your habit journey</p>
+                </div>
+                <!-- Period Selector -->
+                <div class="period-switcher">
+                    <button class="btn btn-sm period-btn active" id="period7" onclick="setPeriod(7)">7 Days</button>
+                    <button class="btn btn-sm period-btn" id="period14" onclick="setPeriod(14)">14 Days</button>
+                    <button class="btn btn-sm period-btn" id="period30" onclick="setPeriod(30)">30 Days</button>
+                </div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="stats-grid" id="summaryGrid">
+                <div class="stat-card animate-fade-up">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value" id="sTotalHabits">–</div>
+                    <div class="stat-label">Total Habits</div>
+                </div>
+                <div class="stat-card animate-fade-up">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value" id="sToday">–</div>
+                    <div class="stat-label">Done Today</div>
+                </div>
+                <div class="stat-card animate-fade-up">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value" id="sBestStreak">– days</div>
+                    <div class="stat-label">Best Streak</div>
+                </div>
+                <div class="stat-card animate-fade-up">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value" id="sRate">–%</div>
+                    <div class="stat-label">Completion Rate</div>
+                </div>
+            </div>
+
+            <!-- Executive Insights -->
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <h3 class="chart-title"><span>🧭</span> Performance Snapshot</h3>
+                    <div class="insight-kpis">
+                        <div class="insight-kpi-item">
+                            <div class="insight-kpi-value" id="kpiActiveDays">–</div>
+                            <div class="insight-kpi-label">Active Days</div>
+                        </div>
+                        <div class="insight-kpi-item">
+                            <div class="insight-kpi-value" id="kpiMomentum">–</div>
+                            <div class="insight-kpi-label">Momentum</div>
+                        </div>
+                        <div class="insight-kpi-item">
+                            <div class="insight-kpi-value" id="kpiAvgStreak">–</div>
+                            <div class="insight-kpi-label">Avg Streak</div>
+                        </div>
+                        <div class="insight-kpi-item">
+                            <div class="insight-kpi-value" id="kpiBestHabit">–</div>
+                            <div class="insight-kpi-label">Top Habit</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <h3 class="chart-title"><span>🧠</span> Smart Recommendations</h3>
+                    <div class="recommend-list" id="recommendationList">
+                        <div class="skeleton" style="height:42px;"></div>
+                        <div class="skeleton" style="height:42px;"></div>
+                        <div class="skeleton" style="height:42px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 1 -->
+            <div class="charts-grid">
+
+                <!-- Daily Completion Bar Chart -->
+                <div class="chart-card">
+                    <h3 class="chart-title"><span>📅</span> Daily Completions</h3>
+                    <div style="position:relative;height:240px;">
+                        <canvas id="dailyChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Completion Rate Doughnut -->
+                <div class="chart-card">
+                    <h3 class="chart-title"><span>🎯</span> Today's Progress</h3>
+                    <div class="progress-layout">
+                        <div class="progress-donut-wrap">
+                            <canvas id="progressChart"></canvas>
+                            <div class="progress-center-label">
+                                <span id="progressPercent" class="progress-percent">0%</span>
+                                <span class="progress-caption">Complete</span>
+                            </div>
+                        </div>
+                        <div class="progress-stats">
+                            <div>
+                                <div class="progress-stat-value success" id="progCompleted">0</div>
+                                <div class="progress-stat-label">Completed</div>
+                            </div>
+                            <div>
+                                <div class="progress-stat-value" id="progRemaining">0</div>
+                                <div class="progress-stat-label">Remaining</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 2 -->
+            <div class="charts-grid">
+
+                <!-- Weekly Rate Line Chart -->
+                <div class="chart-card">
+                    <h3 class="chart-title"><span>📈</span> Monthly Trend</h3>
+                    <div style="position:relative;height:240px;">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Weekly Bar Chart -->
+                <div class="chart-card">
+                    <h3 class="chart-title"><span>📆</span> Weekly Summary</h3>
+                    <div style="position:relative;height:240px;">
+                        <canvas id="weeklyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance & Activity -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title"><span>🥇</span> Habit Leaderboard</h3>
+                    <div style="position:relative;height:260px;">
+                        <canvas id="leaderboardChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title"><span>🕒</span> Recent Activity</h3>
+                    <div class="timeline-list" id="recentTimeline">
+                        <div class="skeleton" style="height:48px;"></div>
+                        <div class="skeleton" style="height:48px;"></div>
+                        <div class="skeleton" style="height:48px;"></div>
+                        <div class="skeleton" style="height:48px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Streaks Table -->
+            <div class="chart-card" style="margin-bottom:2rem;">
+                <h3 class="chart-title"><span>🏆</span> Individual Habit Streaks</h3>
+                <div class="streak-list" id="streakList">
+                    <div class="skeleton" style="height:56px;border-radius:12px;"></div>
+                    <div class="skeleton" style="height:56px;border-radius:12px;"></div>
+                    <div class="skeleton" style="height:56px;border-radius:12px;"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/analytics.js"></script>
+</body>
+
+</html>
